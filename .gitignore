@@ -1,0 +1,16 @@
+# Hugo's output directory (Cloudflare will build this itself)
+public/
+resources/_gen/
+
+# Temporary files created by Hugo
+.hugo_build.lock
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Local environment variables
+.env
+
+# If use assets or node modules for themes
+node_modules/
