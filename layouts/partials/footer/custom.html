@@ -1,0 +1,61 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // ------------------------------------------------------------------
+        // 配置区域
+        // ------------------------------------------------------------------
+        
+        // 1. 从 Hugo 的 data/quotes.yaml 读取数据 (构建时执行)
+        const quotes = {{ site.Data.quotes | jsonify }};
+        
+        // 2. 目标元素选择器 (Stack 主题侧边栏描述文字)
+        // 如果你的主题版本不同，可能需要改为 '.site-description' 或 '.profile-description'
+        const targetSelector = '.sidebar .subtitle';
+        
+        // 3. 动画时长 (毫秒)
+        const transitionDuration = 300;
+
+        // ------------------------------------------------------------------
+        // 核心逻辑
+        // ------------------------------------------------------------------
+        
+        const subtitleElement = document.querySelector(targetSelector);
+
+        // 只有当 数据存在 且 页面上有这个元素 时才运行
+        if (quotes && quotes.length > 0 && subtitleElement) {
+            
+            // 初始化变量
+            let currentIndex = 0;
+            
+            // 设置初始文字 (第一句)
+            subtitleElement.innerText = quotes[currentIndex];
+
+            // ------------------------------------------------------------------
+            // 样式优化 (让用户知道这行字可以点)
+            // ------------------------------------------------------------------
+            subtitleElement.style.cursor = "pointer";       // 鼠标变小手
+            subtitleElement.style.userSelect = "none";      // 防止双击选中文字
+            subtitleElement.title = "点击切换 / Click to swap"; // 鼠标悬停提示
+            subtitleElement.style.transition = `opacity ${transitionDuration}ms ease`; // 添加平滑过渡
+
+            // ------------------------------------------------------------------
+            // 点击事件监听
+            // ------------------------------------------------------------------
+            subtitleElement.addEventListener('click', function () {
+                // 1. 先淡出 (隐藏)
+                subtitleElement.style.opacity = 0;
+
+                // 2. 等待动画结束后，切换文字，再淡入
+                setTimeout(() => {
+                    // 算法核心：取模运算实现循环播放
+                    currentIndex = (currentIndex + 1) % quotes.length;
+                    
+                    // 更新文字
+                    subtitleElement.innerText = quotes[currentIndex];
+                    
+                    // 3. 淡入 (显示)
+                    subtitleElement.style.opacity = 1;
+                }, transitionDuration);
+            });
+        }
+    });
+</script>
