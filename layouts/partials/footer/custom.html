@@ -36,3 +36,14 @@
         }
     });
 </script>
+
+<style>
+/* 针对侧边栏描述的强制不换行优化 */
+.sidebar .subtitle, .site-description, .profile-description {
+    white-space: nowrap !important;    /* 强制不换行 */
+    overflow: hidden !important;       /* 超出部分隐藏 */
+    text-overflow: ellipsis !important; /* 超出部分显示省略号 (...) */
+    display: block !important;         /* 确保宽度限制生效 */
+    max-width: 100%;                   /* 限制最大宽度为侧边栏宽度 */
+}
+</style>
