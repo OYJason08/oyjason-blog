@@ -1,49 +1,97 @@
+<style>
+/* 1. 锁定侧边栏整体宽度 */
+.sidebar {
+    width: 280px !important;
+    max-width: 280px !important;
+    flex-basis: 280px !important;
+}
+
+/* 2. 锁定名言区域的物理空间 */
+.sidebar .subtitle, .site-description, .profile-description {
+    display: flex !important;      
+    align-items: flex-start;        /* 垂直：往上靠 */
+    justify-content: flex-start;     /* 水平：往左靠 */
+    
+    width: 90% !important;
+    padding-left: 10px;
+    padding-top: 5px;
+    margin: 15px auto !important;   /* 固定外边距 */
+    
+    /* 【核心修复】使用 px 或 rem 替代 em */
+    /* 无论内部字号如何变，这个盒子永远是 80px 高 */
+    height: 40px !important;       
+    min-height: 40px !important;
+    max-height: 40px !important;
+    
+    overflow: hidden !important;    /* 防止极端情况溢出 */
+    
+    /* 文字排版 */
+    text-align: left;
+    word-break: break-all;
+    white-space: normal !important;
+    line-height: 1.4 !important;    /* 行高也尽量固定 */
+    
+    user-select: none;
+    transition: opacity 0.2s ease, font-size 0.2s ease;
+}
+</style>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // 【关键修复】去掉外层的引号，直接让 Hugo 输出 JS 数组格式
         const quotes = {{ site.Data.quotes | jsonify | safeJS }};
-        
-        // 调试用：如果这一行在控制台输出的是 String 而不是 Array，说明还是错的
-        console.log("Quotes type:", typeof quotes, quotes);
-
         const targetSelector = '.sidebar .subtitle, .site-description, .profile-description';
         const subtitleElement = document.querySelector(targetSelector);
 
-        // 确保 quotes 是一个真正的数组
         if (Array.isArray(quotes) && quotes.length > 0 && subtitleElement) {
             let currentIndex = 0;
 
-            // 强制初始化显示第一句完整的话
-            subtitleElement.innerText = quotes[currentIndex];
+            // 1. 定义一个调整字号的内部函数
+            const updateSubtitle = (index) => {
+                const text = quotes[index];
+                // 动态调整字号
+                const weight = text.split('').reduce((acc, char) => {
+                    return acc + (char.match(/[^\x00-\xff]/) ? 2 : 1);
+                }, 0);
+                console.log(weight)
+                if (weight > 30) {
+                    subtitleElement.style.fontSize = "1.5rem"; // 极长文本
+                    // subtitleElement.style.lineHeight = "1.5";
+                } else if (weight > 20) {
+                    subtitleElement.style.fontSize = "1.8rem"; // 中长文本
+                    // subtitleElement.style.lineHeight = "1.2";
+                } else {
+                    subtitleElement.style.fontSize = "2.1rem"; // 短文本
+                    // subtitleElement.style.lineHeight = "0.9";
+                }
+                subtitleElement.textContent = text;
+                if (index === quotes.length - 1) {
+                    subtitleElement.style.cursor = "default";
+                    subtitleElement.style.opacity = "0.6"; // 稍微变暗
+                    subtitleElement.title = "Now You See Me";
+                } else {
+                    subtitleElement.style.cursor = "pointer";
+                    subtitleElement.style.opacity = "1";
+                    subtitleElement.title = "Moving Foward?";
+                }
+            };
 
-            // 样式与交互
-            subtitleElement.style.animation = "none"; 
-            subtitleElement.style.whiteSpace = "normal"; 
-            subtitleElement.style.cursor = "pointer";
-            subtitleElement.style.userSelect = "none";
-            subtitleElement.style.transition = "opacity 0.2s ease"; 
+            updateSubtitle(currentIndex);
 
-            subtitleElement.addEventListener('click', function () {
+            const handleClick = function () {
+                if (currentIndex >= quotes.length - 1) return;
+
                 subtitleElement.style.opacity = 0;
                 setTimeout(() => {
-                    // 索引加 1
-                    currentIndex = (currentIndex + 1) % quotes.length;
-                    // 替换为整行文本
-                    subtitleElement.textContent = quotes[currentIndex];
+                    currentIndex++;
+                    updateSubtitle(currentIndex);
                     subtitleElement.style.opacity = 1;
+                    
+                    if (currentIndex === quotes.length - 1) {
+                        subtitleElement.removeEventListener('click', handleClick);
+                    }
                 }, 200);
-            });
+            };
+            subtitleElement.addEventListener('click', handleClick);
         }
     });
 </script>
-
-<style>
-/* 针对侧边栏描述的强制不换行优化 */
-.sidebar .subtitle, .site-description, .profile-description {
-    white-space: nowrap !important;    /* 强制不换行 */
-    overflow: hidden !important;       /* 超出部分隐藏 */
-    text-overflow: ellipsis !important; /* 超出部分显示省略号 (...) */
-    display: block !important;         /* 确保宽度限制生效 */
-    max-width: 100%;                   /* 限制最大宽度为侧边栏宽度 */
-}
-</style>
