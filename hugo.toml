@@ -4,6 +4,7 @@ title = "OYJason's Blog"
 theme = "hugo-theme-stack"
 
 [params]
+    favicon = "/favicon.ico"
     mainSections = ["post"]
     author = "你的名字"
     description = "学会放好以前的渴望"
