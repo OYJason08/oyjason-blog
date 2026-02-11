@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+<meting-js
+    server="tencent"
+    type="playlist"
+    id="{{ .Get "id" }}"
+    fixed="{{ if .Get "fixed" }}true{{ else }}false{{ end }}"
+    mini="{{ if .Get "mini" }}true{{ else }}false{{ end }}"
+    autoplay="{{ if .Get "autoplay" }}true{{ else }}false{{ end }}"
+    theme="#2980b9"
+    list-folded="true">
+</meting-js>
