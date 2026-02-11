@@ -11,12 +11,30 @@
     :root, 
     :root[data-scheme="dark"], 
     body[data-scheme="dark"] {
-        /* 【核心】：把所有卡片的背景变量，强行改成半透明黑色 */
         --card-background: rgba(28, 28, 28, 0.6) !important;
         
-        /* 把页面主体的背景变量改成透明，确保不遮挡你的壁纸 */
         --body-background: transparent !important;
     }
+    body[data-scheme="dark"] .article-content blockquote,
+    :root[data-scheme="dark"] .article-content blockquote,
+    .article-content blockquote {
+        /* 核心：把背景色强制改成半透明黑 */
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        background: rgba(0, 0, 0, 0.2) !important;
+        
+        /* 边框颜色 */
+        border-left-color: rgba(255, 255, 255, 0.6) !important;
+        
+        /* 文字颜色 */
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    /* 2. 防止引用块里的文字也有背景色 (有些主题会给 p 标签加背景) */
+    .article-content blockquote p {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
+
 
     /* --- 基础样式（默认针对手机端 Mobile First） --- */
     body {
@@ -41,16 +59,28 @@
         flex-basis: auto !important;
     }
 
+    @media screen and (max-width: 768px) {
+        .sidebar { 
+            width: 95% !important; 
+            max-width: 95% !important; 
+            margin: 10px auto;
+            /* 【修复】手机端增加顶部内边距，让标题离顶部远一点 */
+            padding-top: 40px !important; 
+            padding-bottom: 20px !important; 
+        }
+    }
+
     .sidebar .subtitle, .site-description, .profile-description {
         display: flex !important;
         align-items: flex-start;    /* 垂直靠上 */
         justify-content: flex-start; /* 水平靠左 */
         
         width: 90% !important;      /* 留出左右边距 */
-        margin: 10px auto !important;
-        
+        /* margin: 10px auto !important; */
+        margin: 25px auto 10px !important;
         /* 【手机端高度】手机屏幕宝贵，给稍微矮一点的固定空间 */
-        height: 3.5rem !important;  
+        /* height: 3.5rem !important;   */
+        height: auto !important;
         min-height: 3.5rem !important;
         
         padding-left: 5px;          /* 手机端稍微紧凑一点 */
@@ -67,6 +97,7 @@
         /* transition: opacity 0.2s ease, font-size 0.2s ease; */
     }
 
+    
     /* --- 电脑/平板端样式（屏幕宽度大于 768px 时触发） --- */
     @media screen and (min-width: 768px) {
         /* 电脑端通常侧边栏是固定的，我们可以给一个更舒适的高度 */
@@ -81,28 +112,6 @@
             /* 如果你依然想在电脑端限制最大宽度，可以在这里加 */
             /* max-width: 280px; */ 
         }
-    }
-
-    .sidebar-qqmusic-container {
-        width: 100%;
-        height: 0;
-        padding-bottom: 80px; /* 预留高度 */
-        margin: 15px auto;
-        border-radius: 8px;
-        overflow: hidden;
-        position: relative;
-        z-index: 10;
-        
-        /* 【关键】因为QQ音乐官方播放器太宽，我们需要缩小它 */
-        transform-origin: top left;
-        transform: scale(0.85); /* 整体缩小到 85% 以适应 280px 宽度 */
-        width: 117%; /* 放大容器宽度，抵消缩放带来的留白 (1 / 0.85 ≈ 1.17) */
-    }
-
-    .sidebar-qqmusic-container iframe {
-        border: none;
-        width: 100%;
-        height: 450px; /* 歌单列表的高度，可以改小，比如 100px 只显示单曲 */
     }
 
     /* 我们要把毛玻璃效果加给所有使用了该变量的元素 */
@@ -121,6 +130,17 @@
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
         border-radius: 16px !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+    }
+
+    .article-content blockquote {
+        /* 1. 强制背景半透明 (0.1 是透明度，越小越透) */
+        background: rgba(0, 0, 0, 0.2) !important; 
+        
+        /* 2. 调整左侧竖线的颜色 (让它亮一点，配合深色背景) */
+        border-left: 4px solid rgba(255, 255, 255, 0.4) !important;
+        
+        /* 3. 调整引用文字颜色 (防止太暗看不清) */
+        color: rgba(255, 255, 255, 0.85) !important;
     }
 </style>
 
