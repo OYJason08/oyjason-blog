@@ -1,0 +1,103 @@
+<style>
+    body[data-scheme="dark"] .article-content blockquote,
+    :root[data-scheme="dark"] .article-content blockquote,
+    .article-content blockquote {
+        /* 核心：把背景色强制改成半透明黑 */
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        background: rgba(0, 0, 0, 0.2) !important;
+        
+        /* 边框颜色 */
+        border-left-color: rgba(255, 255, 255, 0.6) !important;
+        
+        /* 文字颜色 */
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    /* 2. 防止引用块里的文字也有背景色 (有些主题会给 p 标签加背景) */
+    .article-content blockquote p {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
+
+    /* 我们要把毛玻璃效果加给所有使用了该变量的元素 */
+    .article-list article,  /* 首页文章卡片 */
+    .main-article,          /* 文章详情页 */
+    .widget,                /* 右侧小挂件 (如果有) */
+    .menu-modal,            /* 手机端弹出的菜单 */
+    .search-modal           /* 搜索框 */
+    {
+        /* 强制使用我们上面定义的半透明变量 */
+        background-color: var(--card-background) !important;
+        
+        /* 加上毛玻璃和边框 */
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+    }
+
+    .article-content blockquote {
+        /* 1. 强制背景半透明 (0.1 是透明度，越小越透) */
+        background: rgba(0, 0, 0, 0.2) !important; 
+        
+        /* 2. 调整左侧竖线的颜色 (让它亮一点，配合深色背景) */
+        border-left: 4px solid rgba(255, 255, 255, 0.4) !important;
+        
+        /* 3. 调整引用文字颜色 (防止太暗看不清) */
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+</style>
+
+
+{{ if .IsPage }}
+<style> 
+    .article-subtitle {
+        opacity: 0 !important;
+        transition: opacity 0.3s ease; /* 优雅显形 */
+    }
+
+        
+    .article-subtitle.is-visible {
+        opacity: 1 !important;
+    }
+
+    .article-subtitle.is-typing {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .article-content > *:not(blockquote),   /* 普通元素：直接隐藏 */
+    .article-content blockquote > * {       /* 引用里的段落：隐藏 */
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+
+    /* 配合的显形规则也要改一下 */
+    .article-content > *.reveal-visible,
+    .article-content blockquote > *.reveal-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .article-content > *.reveal-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* 光标样式 */
+    .ti-cursor {
+        color: var(--primary);
+        font-weight: bold;
+    }
+    
+    /* 无 JS 时的兜底 */
+    noscript .article-subtitle,
+    noscript .article-content > * {
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+</style>
+{{ end }}

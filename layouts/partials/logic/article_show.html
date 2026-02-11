@@ -1,0 +1,100 @@
+{{ if .IsPage }}
+<script>
+    document.documentElement.classList.remove('no-js');
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        const titleSelector = '.article-title';
+        const descSelector  = '.article-subtitle'; 
+        const titleElem = document.querySelector(titleSelector);
+        const descElem  = document.querySelector(descSelector);
+
+        const startTypingDescription = () => {
+            if (descElem) {
+                const rawDesc = descElem.innerText.trim();
+                if (!rawDesc) {
+                    descElem.classList.add('is-visible');
+                    return;
+                }
+                descElem.innerHTML = ""; 
+                
+                descElem.classList.add('is-visible'); 
+                
+                try {
+                    new TypeIt(descSelector, {
+                        strings: rawDesc,
+                        speed: 100,
+                        lifeLike: true,
+                        cursor: false, // 描述不加光标，干净点
+                    }).go();
+                } catch (e) {
+                    console.error("TypeIt Error:", e);
+                    descElem.innerText = rawDesc;
+                }
+            }
+        };
+
+        // 开始流程
+        if (titleElem) {
+            // 确保标题可见
+            titleElem.style.visibility = "visible";
+            
+            new TypeIt(titleSelector, {
+                speed: 100,
+                lifeLike: true,
+                cursor: true,
+                afterComplete: function(instance) {
+                    // 标题打完后：
+                    instance.destroy();       // 销毁标题光标
+                    setTimeout(startTypingDescription, 300); // 稍微停顿 300ms 再打描述，节奏更好
+                }
+            }).go();
+        } else {
+            startTypingDescription();
+        }
+
+
+        const articleContent = document.querySelector('.article-content');
+        
+        if (articleContent) {
+            // 使用 Array.from 确保拿到的是数组
+            let children = [];
+            Array.from(articleContent.children).forEach(child => {
+                // 如果遇到引用块 (BLOCKQUOTE)，不要把盒子加进去，而是把里面的每一段话加进去
+                if (child.tagName === 'BLOCKQUOTE') {
+                    children = children.concat(Array.from(child.children));
+                } else {
+                    // 普通元素 (H2, P, IMG...) 直接加进去
+                    children.push(child);
+                }
+            });
+            // 观察者
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        
+                        // 动态计算延时：每个元素比上一个多等 100ms
+                        // 这样即使都在屏幕里，也会像多米诺骨牌一样出来
+                        // 我们用 entry.time 或者自己在外部维护计数器也可以，
+                        // 但这里直接利用 entries 数组的 index 最简单有效
+                        const delay = index * 500; 
+
+                        setTimeout(() => {
+                            target.classList.add('reveal-visible');
+                            observer.unobserve(target); 
+                        }, delay);
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.1, 
+                rootMargin: "0px 0px -50px 0px" 
+            });
+
+            children.forEach(child => {
+                observer.observe(child);
+            });
+        }
+    });
+</script>
+{{ end }}

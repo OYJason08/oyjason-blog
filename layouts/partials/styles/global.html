@@ -1,0 +1,62 @@
+<style>
+ #dark-mode-toggle {
+        display: none !important;
+    }
+    
+    .menu-bottom-section {
+        display: none !important;
+    }
+
+    :root, 
+    :root[data-scheme="dark"], 
+    body[data-scheme="dark"] {
+        --card-background: rgba(28, 28, 28, 0.6) !important;
+        
+        --body-background: transparent !important;
+    }
+
+    html, body, 
+    html[data-scheme="dark"], 
+    body[data-scheme="dark"] {
+        filter: none !important;              /* 关掉所有滤镜 */
+        -webkit-filter: none !important;
+        background: transparent !important;   /* 确保背景透明 */
+        mix-blend-mode: normal !important;    /* 关掉混合模式 */
+    }
+    body::before {
+        content: "";
+        position: fixed; /* 【关键】强制固定在窗口，不随页面滚动 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* 放在所有内容的背面 */
+
+        /* 这里放原本的背景设置 */
+        background-image: url('/images/LCLR1_PhotoGrid.png'); /* 确保路径对 */
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        
+        /* 滤镜也搬到这里 */
+        filter: none !important;
+        filter: grayscale(80%); 
+        
+        /* 稍微优化性能 */
+        will-change: transform; 
+        pointer-events: none;
+    }
+
+    /* 2. body 本身变成透明容器，只负责装内容 */
+    body {
+        background: transparent !important; /* 去掉 body 自己的背景 */
+        background-image: none !important;  /* 双重保险 */
+        min-height: 100vh;
+    }
+
+    .ti-cursor {
+        color: #3b82f6 !important;
+        font-weight: bold;
+        margin-left: 2px;
+    }
+</style>
