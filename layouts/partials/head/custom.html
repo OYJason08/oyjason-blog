@@ -1,0 +1,6 @@
+{{ $icon := resources.Get "iamges/universe_round.png" }}
+{{ if $icon }}
+    <link rel="icon" type="image/png" href="{{ $icon.Permalink }}?v={{ now.Unix }}">
+{{ end }}
+{{ partial "logic/styles.html" . }}
+

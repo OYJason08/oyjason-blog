@@ -48,17 +48,3 @@ theme = "hugo-theme-stack"
         # { type = "user", enabled = true, avatar = "/images/PaperCrane.png" },
         { type = "categories", enabled = true, limit = 10 }
     ]
-
-# [[params.widgets]]
-#     enabled = true
-#     type = "profile"
-#     avatar = "/images/PaperCrane.png"
-    # author = "OYJason"
-    # subtitle = "就当全是一场梦"
-    # social = true
-    
-# [[params.widgets]]
-#     enabled = true
-#     type = "categories"
-#     limit = 10
-#     ordering = "count"

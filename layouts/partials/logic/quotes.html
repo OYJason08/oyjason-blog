@@ -1,0 +1,74 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const quotes = {{ site.Data.quotes | jsonify | safeJS }};
+        const targetSelector = '.sidebar .subtitle, .site-description, .profile-description';
+        const subtitleElement = document.querySelector(targetSelector);
+        const STORAGE_KEY = 'user_quote_index';
+        let typeInstance = null;
+        if (Array.isArray(quotes) && quotes.length > 0 && subtitleElement) {
+            let savedIndex = localStorage.getItem(STORAGE_KEY);let currentIndex = savedIndex ? parseInt(savedIndex, 10) : 0;
+            if (currentIndex >= quotes.length || isNaN(currentIndex)) currentIndex = 0;
+            if (currentIndex >= quotes.length || isNaN(currentIndex)) currentIndex = 0;
+
+            // 1. 定义一个调整字号的内部函数
+            const updateSubtitle = (index) => {
+                const text = quotes[index];
+                // 动态调整字号
+                const weight = text.split('').reduce((acc, char) => {
+                    return acc + (char.match(/[^\x00-\xff]/) ? 2 : 1);
+                }, 0);
+                console.log(weight)
+                if (weight > 30) subtitleElement.style.fontSize = "1.5rem"; // 极长文本
+                else if (weight > 20) subtitleElement.style.fontSize = "1.8rem"; // 中长文本
+                else subtitleElement.style.fontSize = "2.1rem"; // 短文本
+                subtitleElement.textContent = text;
+
+                // if (typeInstance) { typeInstance.destroy(); }
+                // subtitleElement.innerText = ""; // 清空当前文字
+                // typeInstance = new TypeIt(targetSelector, {
+                //     strings: text,
+                //     speed: 80,         // 打字速度
+                //     cursor: true,      // 显示光标
+                //     nextStringDelay: 0,
+                //     waitUntilVisible: true,
+                //     afterComplete: (instance) => {
+                //         instance.destroy(); // 打印完成后销毁光标
+                //     }
+                // }).go();
+
+                subtitleElement.style.cursor = "pointer";
+                subtitleElement.style.opacity = "1";
+                subtitleElement.title = index === quotes.length - 1 ? "Now You See Me" : "Moving Forward?";
+                localStorage.setItem(STORAGE_KEY, index);
+            };
+            
+            updateSubtitle(currentIndex);
+
+            const handleClick = function () {
+                subtitleElement.style.opacity = 0;
+                if (currentIndex >= quotes.length - 1){
+                    
+                    subtitleElement.style.transition = "opacity 0.3s ease";
+
+                    setTimeout(() => {
+                        currentIndex=0;
+                        updateSubtitle(currentIndex);
+                        subtitleElement.style.opacity = 1;
+                        
+                    }, 800);
+                    return;
+                }
+                subtitleElement.style.transition = "opacity 0.3s ease";
+
+                subtitleElement.style.opacity = 0;
+                setTimeout(() => {
+                    currentIndex++;
+                    updateSubtitle(currentIndex);
+                    subtitleElement.style.opacity = 1;
+                    
+                }, 200);
+            };
+            subtitleElement.addEventListener('click', handleClick);
+        }
+    });
+</script>
