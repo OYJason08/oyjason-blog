@@ -37,22 +37,58 @@
 
 
     /* --- 基础样式（默认针对手机端 Mobile First） --- */
-    body {
-        /* 1. 图片路径：对应你放在 static/images/ 下的图片 */
+    /* body {
         background-image: url('/images/LCLR1_PhotoGrid.png');
         
-        /* 2. 确保图片铺满整个屏幕，不留白 */
         background-size: cover;
         
         background-position: center center;
         
         background-repeat: no-repeat;
-        
+
         background-attachment: fixed;
 
         filter: grayscale(60%);
+    } */
+
+    html, body, 
+    html[data-scheme="dark"], 
+    body[data-scheme="dark"] {
+        filter: none !important;              /* 关掉所有滤镜 */
+        -webkit-filter: none !important;
+        background: transparent !important;   /* 确保背景透明 */
+        mix-blend-mode: normal !important;    /* 关掉混合模式 */
     }
-    
+    body::before {
+        content: "";
+        position: fixed; /* 【关键】强制固定在窗口，不随页面滚动 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* 放在所有内容的背面 */
+
+        /* 这里放原本的背景设置 */
+        background-image: url('/images/LCLR1_PhotoGrid.png'); /* 确保路径对 */
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        
+        /* 滤镜也搬到这里 */
+        filter: none !important;
+        filter: grayscale(80%); 
+        
+        /* 稍微优化性能 */
+        will-change: transform; 
+        pointer-events: none;
+    }
+
+    /* 2. body 本身变成透明容器，只负责装内容 */
+    body {
+        background: transparent !important; /* 去掉 body 自己的背景 */
+        background-image: none !important;  /* 双重保险 */
+        min-height: 100vh;
+    }
     .sidebar {
         width: 30% !important; /* 跟随主题布局 */
         max-width: 100% !important;
@@ -66,7 +102,6 @@
             margin: 10px auto;
             /* 【修复】手机端增加顶部内边距，让标题离顶部远一点 */
             padding-top: 40px !important; 
-            padding-bottom: 20px !important; 
         }
     }
 
@@ -141,6 +176,22 @@
         
         /* 3. 调整引用文字颜色 (防止太暗看不清) */
         color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    /* 专门针对分类页顶部的文字框 */
+    .taxonomy-header {
+        border-left: 5px solid #3b82f6; /* 加一条蓝色的左边框，增加“画风”区别 */
+        background: rgba(255, 255, 255, 0.03) !important;
+        padding: 2rem !important;
+        margin-bottom: 2rem;
+    }
+
+    /* 让分类标题有 TypeIt 般的仪式感 */
+    .taxonomy-title {
+        font-family: 'Courier New', monospace;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--primary-color) !important;
     }
 </style>
 

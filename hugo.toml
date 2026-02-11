@@ -5,12 +5,14 @@ theme = "hugo-theme-stack"
 
 [params]
     mainSections = ["post"]
-    description = "学会放好以前的渴望"
-    
+    author = "你的名字"
+    subtitle = "学会放好以前的渴望"
+    avatar = "/images/avatar.png"
+
     [params.sidebar]
         emoji = "🍥"
         subtitle = "Loading quotes..."
-        typeit = false
+        typeit = true
 
     [params.article]
         # 如果你后续要在文章里写 Boolean function analysis 的公式，开启这个
@@ -19,6 +21,7 @@ theme = "hugo-theme-stack"
     [params.footer]
         # 这里的版权声明可以自定义
         copyright = "© 2026 OYJason"
+
 
 # 菜单配置
 [[menu.main]]
@@ -32,3 +35,30 @@ theme = "hugo-theme-stack"
     name = "Archives"
     url = "/archives/"
     weight = 2
+
+
+[params.widgets]
+    # 这是首页和分类页的侧边栏配置
+    homepage = [
+        # { type = "user", enabled = true, avatar = "/images/PaperCrane.png" },
+        { type = "categories", enabled = true, limit = 10 }
+    ]
+    # 这是文章详情页的侧边栏配置
+    page = [
+        # { type = "user", enabled = true, avatar = "/images/PaperCrane.png" },
+        { type = "categories", enabled = true, limit = 10 }
+    ]
+
+# [[params.widgets]]
+#     enabled = true
+#     type = "profile"
+#     avatar = "/images/PaperCrane.png"
+    # author = "OYJason"
+    # subtitle = "就当全是一场梦"
+    # social = true
+    
+# [[params.widgets]]
+#     enabled = true
+#     type = "categories"
+#     limit = 10
+#     ordering = "count"
