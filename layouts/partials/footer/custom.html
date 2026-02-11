@@ -36,21 +36,6 @@
     }
 
 
-    /* --- 基础样式（默认针对手机端 Mobile First） --- */
-    /* body {
-        background-image: url('/images/LCLR1_PhotoGrid.png');
-        
-        background-size: cover;
-        
-        background-position: center center;
-        
-        background-repeat: no-repeat;
-
-        background-attachment: fixed;
-
-        filter: grayscale(60%);
-    } */
-
     html, body, 
     html[data-scheme="dark"], 
     body[data-scheme="dark"] {
@@ -90,7 +75,7 @@
         min-height: 100vh;
     }
     .sidebar {
-        width: 30% !important; /* 跟随主题布局 */
+        width: 20% !important; /* 跟随主题布局 */
         max-width: 100% !important;
         flex-basis: auto !important;
     }
@@ -103,6 +88,12 @@
             /* 【修复】手机端增加顶部内边距，让标题离顶部远一点 */
             padding-top: 40px !important; 
         }
+    }
+
+    .ti-cursor {
+        color: #3b82f6 !important;
+        font-weight: bold;
+        margin-left: 2px;
     }
 
     .sidebar .subtitle, .site-description, .profile-description {
@@ -193,6 +184,53 @@
         letter-spacing: 3px;
         color: var(--primary-color) !important;
     }
+
+    /* 针对整个分类组件容器，增加内部留白 */
+    /* 1. 针对分类组件的整体包裹层 */
+    .widget.categories {
+        /* 使用 box-sizing 确保 padding 不会撑破布局 */
+        box-sizing: border-box !important;
+        padding: 20px !important; 
+    }
+
+    /* 2. 关键：针对分类列表的内部容器 */
+    /* Stack 主题在这里通常有一个 .widget-card 或 .section 容器 */
+    .widget.categories .section {
+        padding: 10px !important;
+        margin: 0 !important;
+    }
+
+    /* 3. 针对分类按钮的“胶囊”化 */
+    .widget.categories .menu li a {
+        /* 强行拉开文字到框边的距离 */
+        padding: 8px 16px !important; 
+        margin-bottom: 10px !important;
+        
+        /* 确保它是块级显示，否则 padding 左右生效但上下会被挤压 */
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        
+        border-radius: 10px !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* 4. 如果你想让文字缩进，不那么贴着框的左边 */
+    .widget.categories .menu li a span:first-child {
+        margin-left: 5px;
+    }
+
+    /* 1. 强制推开整个分类列表的左边距 */
+    .widget.categories .section.categories {
+        margin: 15px !important; /* 直接给内部容器加四周的外边距 */
+    }
+
+    @media (min-width: 1024px) {
+        .main-container {
+            gap: 20px !important; /* 强制拉近 */
+        }
+    }
+
 </style>
 
 
@@ -202,18 +240,11 @@
         const targetSelector = '.sidebar .subtitle, .site-description, .profile-description';
         const subtitleElement = document.querySelector(targetSelector);
         const STORAGE_KEY = 'user_quote_index';
-
+        let typeInstance = null;
         if (Array.isArray(quotes) && quotes.length > 0 && subtitleElement) {
-            let savedIndex = localStorage.getItem(STORAGE_KEY);
-            let currentIndex = 0;
-
-            if (savedIndex !== null) {
-                currentIndex = parseInt(savedIndex, 10);
-                // 安全检查：如果记录的索引超过了现在的名言总数，重置为0
-                if (currentIndex >= quotes.length || isNaN(currentIndex)) {
-                    currentIndex = 0;
-                }
-            }
+            let savedIndex = localStorage.getItem(STORAGE_KEY);let currentIndex = savedIndex ? parseInt(savedIndex, 10) : 0;
+            if (currentIndex >= quotes.length || isNaN(currentIndex)) currentIndex = 0;
+            if (currentIndex >= quotes.length || isNaN(currentIndex)) currentIndex = 0;
 
             // 1. 定义一个调整字号的内部函数
             const updateSubtitle = (index) => {
@@ -223,24 +254,27 @@
                     return acc + (char.match(/[^\x00-\xff]/) ? 2 : 1);
                 }, 0);
                 console.log(weight)
-                if (weight > 30) {
-                    subtitleElement.style.fontSize = "1.5rem"; // 极长文本
-                    // subtitleElement.style.lineHeight = "1.5";
-                } else if (weight > 20) {
-                    subtitleElement.style.fontSize = "1.8rem"; // 中长文本
-                    // subtitleElement.style.lineHeight = "1.2";
-                } else {
-                    subtitleElement.style.fontSize = "2.1rem"; // 短文本
-                    // subtitleElement.style.lineHeight = "0.9";
-                }
+                if (weight > 30) subtitleElement.style.fontSize = "1.5rem"; // 极长文本
+                else if (weight > 20) subtitleElement.style.fontSize = "1.8rem"; // 中长文本
+                else subtitleElement.style.fontSize = "2.1rem"; // 短文本
                 subtitleElement.textContent = text;
+
+                // if (typeInstance) { typeInstance.destroy(); }
+                // subtitleElement.innerText = ""; // 清空当前文字
+                // typeInstance = new TypeIt(targetSelector, {
+                //     strings: text,
+                //     speed: 80,         // 打字速度
+                //     cursor: true,      // 显示光标
+                //     nextStringDelay: 0,
+                //     waitUntilVisible: true,
+                //     afterComplete: (instance) => {
+                //         instance.destroy(); // 打印完成后销毁光标
+                //     }
+                // }).go();
+
                 subtitleElement.style.cursor = "pointer";
                 subtitleElement.style.opacity = "1";
-                if (index === quotes.length - 1) {
-                    subtitleElement.title = "Now You See Me";
-                } else {
-                    subtitleElement.title = "Moving Foward?";
-                }
+                subtitleElement.title = index === quotes.length - 1 ? "Now You See Me" : "Moving Forward?";
                 localStorage.setItem(STORAGE_KEY, index);
             };
             

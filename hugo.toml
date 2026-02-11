@@ -6,12 +6,11 @@ theme = "hugo-theme-stack"
 [params]
     mainSections = ["post"]
     author = "你的名字"
-    subtitle = "学会放好以前的渴望"
-    avatar = "/images/avatar.png"
+    description = "学会放好以前的渴望"
 
     [params.sidebar]
-        emoji = "🍥"
-        subtitle = "Loading quotes..."
+        # emoji = ""
+        avatar = "/images/PaperCraneBlank.png"
         typeit = true
 
     [params.article]
