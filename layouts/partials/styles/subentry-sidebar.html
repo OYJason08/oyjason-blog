@@ -1,0 +1,76 @@
+<style>
+    /* =================================================================
+       Target: Encrypt Tool Link in Sidebar
+       File: layouts/partials/head/custom.html
+       ================================================================= */
+    
+    /* 1. 物理隔离：利用 li 推开下方的 Home，不影响左右 */
+    /* .menu li:has(a[href*="encrypt"]), */
+    .menu li:has(a[href*="gallery"]){
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* 2. 按钮本体：控制宽度和对齐 */
+    .menu a[href*="encrypt"],
+    .menu a[href*="gallery"] {
+        /* --- 核心修改开始 --- */
+        margin-bottom: 5px !important; 
+        margin-top: 5px !important;
+        width: 80% !important;        /* 你想要的宽度 */
+        margin-left: 0 !important;    /* 左边不留白，紧贴容器左边缘 */
+        margin-right: auto !important;/* 【关键】把所有剩余空间挤到右边去 */
+        /* --- 核心修改结束 --- */
+
+        /* 盒子内部样式 */
+        padding: 10px 18px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        border-radius: 10px !important;
+
+        /* 玻璃质感 & 边框 */
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        
+        /* 动画 */
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    /* 3. 文字白色 */
+    .menu a[href*="encrypt"] span,
+    .menu a[href*="gallery"] span{
+        color: #ffffff !important;
+        font-family: 'Courier New', monospace !important;
+        font-weight: 700 !important;
+        letter-spacing: 1px !important;
+        font-size: 14px !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+    }
+
+    .menu a[href*="encrypt"] svg,
+    .menu a[href*="gallery"] svg {
+        stroke: #ffffff !important;
+        fill: none !important;
+        width: 20px !important;
+        height: 20px !important;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)) !important;
+        transition: transform 0.5s ease !important;
+    }
+
+    /* 5. 悬停效果 */
+    .menu a[href*="encrypt"]:hover,
+    .menu a[href*="gallery"]:hover {
+        width: 82% !important; 
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: #ffffff !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+    }
+    .menu a[href*="encrypt"]:hover svg {
+        transform: rotate(90deg) !important;
+    }
+</style>

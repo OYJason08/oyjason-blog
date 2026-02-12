@@ -1,0 +1,227 @@
+{{ define "main" }}
+<div class="main-container">
+    <div class="article-content">
+        <h1 class="article-title">{{ .Title }}</h1>
+        <p class="article-subtitle">{{ .Description }}</p>
+        
+        <div class="terminal-grid">
+            <div class="hack-terminal encrypt-side">
+                <div class="terminal-header">
+                    <div class="buttons"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                    <div class="title">BATCH_ENCRYPT_ENGINE</div>
+                </div>
+                <div class="terminal-body">
+                    <div id="drop-zone-enc" class="drop-area">
+                        <div class="icon">📦</div>
+                        <div class="text">DRAG FILES HERE</div>
+                        <div id="enc-queue" class="file-queue"></div>
+                    </div>
+                    <div class="input-group">
+                        <label>> SET_VAULT_KEY:</label>
+                        <div class="pass-wrapper">
+                            <input type="password" class="pass-input" placeholder="Encryption key...">
+                            <span class="eye-toggle">👁️</span>
+                        </div>
+                    </div>
+                    <button id="btn-encrypt" class="hack-btn">[ EXECUTE_BATCH_ENCRYPTION ]</button>
+                </div>
+            </div>
+
+            <div class="hack-terminal decrypt-side">
+                <div class="terminal-header">
+                    <div class="buttons"><span class="dot green"></span><span class="dot yellow"></span><span class="dot red"></span></div>
+                    <div class="title">BATCH_DECRYPT_ENGINE</div>
+                </div>
+                <div class="terminal-body">
+                    <div id="drop-zone-dec" class="drop-area">
+                        <div class="icon">🔓</div>
+                        <div class="text">DECRYPT .ENC FILES</div>
+                        <div id="dec-queue" class="file-queue"></div>
+                    </div>
+                    <div class="input-group">
+                        <label>> INPUT_KEY:</label>
+                        <div class="pass-wrapper">
+                            <input type="password" class="pass-input" placeholder="Decryption key...">
+                            <span class="eye-toggle">👁️</span>
+                        </div>
+                    </div>
+                    <button id="btn-decrypt" class="hack-btn decrypt-theme">[ EXECUTE_BATCH_DECRYPTION ]</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="console-box" id="log">
+            <div class="log-line">> Batch engine ready... Delete function active.</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ... 基础样式保持不变 ... */
+    .terminal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; margin-top: 20px; }
+    .hack-terminal { background: #0d0d0d !important; border: 1px solid #333 !important; border-radius: 8px; font-family: 'Courier New', monospace; overflow: hidden; color: #00ff41 !important; }
+    .terminal-header { background: #1a1a1a !important; padding: 10px; border-bottom: 1px solid #333; display: flex; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+    .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+    .terminal-body { padding: 20px; }
+
+    .drop-area { border: 1px dashed #00ff41 !important; background: rgba(0, 255, 65, 0.03) !important; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 15px; min-height: 120px; }
+    
+    /* 队列与删除按钮样式 */
+    .file-queue { margin-top: 15px; text-align: left; max-height: 200px; overflow-y: auto; }
+    .queue-item { 
+        background: rgba(255,255,255,0.05); 
+        padding: 8px 12px; 
+        margin-bottom: 6px; 
+        border-left: 3px solid #00ff41; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        font-size: 11px;
+    }
+    .remove-btn { 
+        color: #ff5f56; 
+        cursor: pointer; 
+        font-weight: bold; 
+        padding: 2px 8px; 
+        border-radius: 3px;
+        transition: 0.2s;
+    }
+    .remove-btn:hover { background: rgba(255, 95, 86, 0.2); }
+
+    .pass-wrapper { position: relative; width: 100%; }
+    .pass-input { width: 100%; background: #000 !important; border: 1px solid #333 !important; color: #fff !important; padding: 10px; border-radius: 4px; outline: none; }
+    .eye-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5; }
+    .hack-btn { width: 100%; background: #00ff41 !important; color: #000 !important; border: none; padding: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+    .hack-btn.decrypt-theme { background: #008cff !important; color: #fff !important; }
+    .console-box { margin-top: 20px; background: #000 !important; border: 1px solid #333; padding: 10px; height: 120px; overflow-y: auto; color: #00ff41; font-size: 12px; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const log = document.getElementById('log');
+    let encFileList = [], decFileList = [];
+
+    // 1. 显隐切换
+    document.querySelectorAll('.eye-toggle').forEach(btn => {
+        btn.onclick = function(e) {
+            e.stopPropagation(); // 防止触发父级点击
+            const input = this.previousElementSibling;
+            input.type = input.type === "password" ? "text" : "password";
+            this.style.opacity = input.type === "text" ? "1" : "0.5";
+        };
+    });
+
+    // 2. 初始化带删除功能的区域
+    setupBatchZone('drop-zone-enc', 'enc-queue', files => { encFileList = files; });
+    setupBatchZone('drop-zone-dec', 'dec-queue', files => { decFileList = files; });
+
+    function setupBatchZone(zoneId, queueId, onUpdate) {
+        const zone = document.getElementById(zoneId);
+        const queue = document.getElementById(queueId);
+        const input = document.createElement('input');
+        input.type = 'file'; input.multiple = true;
+        
+        let localFiles = [];
+
+        zone.onclick = (e) => {
+            // 只有点在空白处或 icon 上才触发，点删除按钮不触发
+            if (e.target === zone || zone.contains(e.target) && !e.target.classList.contains('remove-btn')) {
+                input.click();
+            }
+        };
+
+        input.onchange = (e) => { addFiles(Array.from(e.target.files)); };
+        zone.ondragover = (e) => { e.preventDefault(); zone.classList.add('active'); };
+        zone.ondragleave = () => zone.classList.remove('active');
+        zone.ondrop = (e) => { e.preventDefault(); zone.classList.remove('active'); addFiles(Array.from(e.dataTransfer.files)); };
+
+        function addFiles(newFiles) {
+            localFiles = [...localFiles, ...newFiles];
+            render();
+        }
+
+        function removeFile(index) {
+            localFiles.splice(index, 1);
+            render();
+        }
+
+        function render() {
+            queue.innerHTML = '';
+            localFiles.forEach((f, i) => {
+                const item = document.createElement('div');
+                item.className = 'queue-item';
+                item.innerHTML = `
+                    <span>${f.name} (${(f.size/1024).toFixed(1)}KB)</span>
+                    <span class="remove-btn" data-index="${i}">[DELETE]</span>
+                `;
+                // 给删除按钮绑定事件
+                item.querySelector('.remove-btn').onclick = (e) => {
+                    e.stopPropagation(); // 关键：防止点击删除时弹出文件选择框
+                    removeFile(i);
+                };
+                queue.appendChild(item);
+            });
+            onUpdate(localFiles);
+        }
+    }
+
+    function writeLog(msg) {
+        const d = document.createElement('div'); d.innerText = `> ${msg}`;
+        log.appendChild(d); log.scrollTop = log.scrollHeight;
+    }
+
+    // --- 加密逻辑 ---
+    document.getElementById('btn-encrypt').onclick = async () => {
+        const pass = document.querySelector('.encrypt-side .pass-input').value;
+        if(encFileList.length === 0 || !pass) return writeLog("ERROR: NO FILES OR KEY.");
+        try {
+            const key = await deriveKey(pass);
+            for (let file of encFileList) {
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const encrypted = await crypto.subtle.encrypt({name: "AES-GCM", iv: iv}, key, await file.arrayBuffer());
+                const combined = new Uint8Array(12 + encrypted.byteLength);
+                combined.set(iv); combined.set(new Uint8Array(encrypted), 12);
+                saveFile(combined, file.name + ".enc");
+                writeLog(`DONE: ${file.name}`);
+            }
+            writeLog("BATCH_ENCRYPTION_COMPLETE.");
+        } catch(e) { writeLog("FATAL: " + e.message); }
+    };
+
+    // --- 解密逻辑 ---
+    document.getElementById('btn-decrypt').onclick = async () => {
+        const pass = document.querySelector('.decrypt-side .pass-input').value;
+        if(decFileList.length === 0 || !pass) return writeLog("ERROR: NO FILES OR KEY.");
+        try {
+            const key = await deriveKey(pass);
+            for (let file of decFileList) {
+                try {
+                    const rawData = new Uint8Array(await file.arrayBuffer());
+                    const decrypted = await crypto.subtle.decrypt({name: "AES-GCM", iv: rawData.slice(0, 12)}, key, rawData.slice(12));
+                    let outName = file.name.toLowerCase().endsWith('.enc') ? file.name.slice(0, -4) : file.name + ".dec";
+                    saveFile(new Uint8Array(decrypted), outName);
+                    writeLog(`DONE: ${file.name}`);
+                } catch(e) { writeLog(`FAILED: ${file.name}`); }
+            }
+            writeLog("BATCH_DECRYPTION_COMPLETE.");
+        } catch(e) { writeLog("FATAL: " + e.message); }
+    };
+
+    async function deriveKey(pass) {
+        const enc = new TextEncoder();
+        const baseKey = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey']);
+        return crypto.subtle.deriveKey(
+            {name: 'PBKDF2', salt: enc.encode('zk-gallery-salt'), iterations: 100000, hash: 'SHA-256'},
+            baseKey, {name: 'AES-GCM', length: 256}, false, ['encrypt', 'decrypt']
+        );
+    }
+
+    function saveFile(data, name) {
+        const blob = new Blob([data], {type: "application/octet-stream"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+    }
+});
+</script>
+{{ end }}

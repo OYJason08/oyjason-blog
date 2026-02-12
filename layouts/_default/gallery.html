@@ -1,0 +1,180 @@
+{{ define "main" }}
+<div class="main-container">
+    <div class="article-content">
+        <header class="article-header">
+            <h1 class="article-title">{{ .Title }}</h1>
+            <p class="article-subtitle">{{ .Description }}</p>
+        </header>
+
+        <div class="gallery-vault-control">
+            <div class="hack-terminal">
+                <div class="terminal-header">
+                    <div class="buttons"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                    <div class="title">AUTH_PROTOCOL_V4</div>
+                </div>
+                <div class="terminal-body">
+                    <div class="input-group">
+                        <label>> INPUT_VAULT_KEY:</label>
+                        <div class="pass-wrapper">
+                            <input type="password" id="gallery-pass" class="pass-input" placeholder="Enter key to decrypt vault...">
+                            <span class="eye-toggle" id="gallery-eye">👁️</span>
+                        </div>
+                    </div>
+                    <button id="btn-unlock-vault" class="hack-btn">[ INITIATE_DECRYPTION_PROTOCOL ]</button>
+                    <div id="gallery-status" class="status-text">> Vault Status: LOCKED</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="gallery-grid">
+            {{ range .Params.images }}
+            <div class="photo-card">
+                <div class="img-wrapper">
+                    <img class="encrypted-img" 
+                         src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'
+                         data-enc-src="{{ .src }}" 
+                         alt="Encrypted Content">
+                    <div class="decode-overlay">DECRYPTING...</div>
+                </div>
+                {{ if .caption }}<p class="caption">> {{ .caption }}</p>{{ end }}
+            </div>
+            {{ end }}
+        </section>
+    </div>
+</div>
+
+<style>
+    /* 样式保持不变，新增一个错误抖动动画 */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    .shake-error { animation: shake 0.3s ease-in-out; border-color: #ff5f56 !important; }
+
+    /* 以下复用之前的样式 */
+    .gallery-vault-control { max-width: 600px; margin: 50px auto 40px; }
+    .hack-terminal { background: #0d0d0d !important; border: 1px solid #333 !important; border-radius: 8px; font-family: 'Courier New', monospace; overflow: hidden; color: #00ff41 !important; }
+    .terminal-header { background: #1a1a1a !important; padding: 10px; border-bottom: 1px solid #333; display: flex; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+    .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+    .terminal-body { padding: 25px; }
+    .pass-wrapper { position: relative; }
+    .pass-input { width: 100%; background: #000 !important; border: 1px solid #333 !important; color: #fff !important; padding: 12px; border-radius: 4px; outline: none; font-family: inherit; transition: border 0.2s; }
+    .pass-input:focus { border-color: #00ff41 !important; }
+    .eye-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5; }
+    .hack-btn { width: 100%; background: #00ff41 !important; color: #000 !important; border: none; padding: 15px; font-weight: bold; cursor: pointer; margin-top: 15px; font-family: inherit; }
+    .status-text { margin-top: 10px; font-size: 12px; color: #888; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+    .photo-card { background: rgba(255,255,255,0.03); border: 1px solid #222; border-radius: 8px; padding: 10px; transition: 0.3s; }
+    .img-wrapper { position: relative; aspect-ratio: 4/3; background: #0a0a0a; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .encrypted-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3) blur(5px); transition: 1s cubic-bezier(0.4, 0, 0.2, 1); }
+    .encrypted-img.unlocked { filter: brightness(1) blur(0); }
+    .decode-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,255,65,0.1); color: #00ff41; display: none; align-items: center; justify-content: center; font-family: 'Courier New', monospace; font-weight: bold; font-size: 12px; }
+    .photo-card.loading .decode-overlay { display: flex; }
+    .caption { margin-top: 10px; font-size: 12px; color: #666; font-family: 'Courier New', monospace; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const btn = document.getElementById('btn-unlock-vault');
+    const passInput = document.getElementById('gallery-pass');
+    const status = document.getElementById('gallery-status');
+    const eye = document.getElementById('gallery-eye');
+
+    eye.onclick = () => {
+        passInput.type = passInput.type === "password" ? "text" : "password";
+        eye.style.opacity = passInput.type === "text" ? "1" : "0.5";
+    };
+
+    btn.onclick = async () => {
+        const password = passInput.value;
+        if (!password) {
+            triggerError("KEY_REQUIRED");
+            return;
+        }
+
+        // 重置状态
+        passInput.classList.remove('shake-error');
+        const images = document.querySelectorAll('.encrypted-img');
+        status.innerText = "> Status: VERIFYING_INTEGRITY...";
+        status.style.color = "#00ff41";
+        
+        // 修复点 2：成功计数器
+        let successCount = 0;
+
+        try {
+            const enc = new TextEncoder();
+            const baseKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey(
+                {name: 'PBKDF2', salt: enc.encode('zk-gallery-salt'), iterations: 100000, hash: 'SHA-256'},
+                baseKey, {name: 'AES-GCM', length: 256}, false, ['decrypt']
+            );
+
+            status.innerText = `> Status: DECRYPTING_${images.length}_ASSETS...`;
+
+            // 并行解密
+            await Promise.all(Array.from(images).map(async (img) => {
+                // 如果这张图已经解开了，就跳过，节省资源
+                if (img.classList.contains('unlocked')) {
+                    successCount++; 
+                    return; 
+                }
+
+                const card = img.closest('.photo-card');
+                const encUrl = img.getAttribute('data-enc-src');
+                
+                card.classList.add('loading');
+                
+                try {
+                    const response = await fetch(encUrl);
+                    if (!response.ok) throw new Error("HTTP_ERROR");
+                    const rawData = new Uint8Array(await response.arrayBuffer());
+                    
+                    const iv = rawData.slice(0, 12);
+                    const ciphertext = rawData.slice(12);
+                    
+                    // 如果这里密码错了，GCM 会直接 throw Error
+                    const decrypted = await crypto.subtle.decrypt({name: "AES-GCM", iv: iv}, key, ciphertext);
+                    
+                    const blob = new Blob([decrypted], { type: 'image/jpeg' });
+                    img.src = URL.createObjectURL(blob);
+                    img.classList.add('unlocked');
+                    
+                    // 只有解密成功才计数
+                    successCount++;
+                    
+                } catch (e) {
+                    console.error("Decryption failed for item:", encUrl);
+                    // 这里不抛出错误，而是让循环继续，看看有没有其他图片能解开
+                } finally {
+                    card.classList.remove('loading');
+                }
+            }));
+
+            // 修复点 3：根据计数器判断最终状态
+            if (successCount > 0) {
+                status.innerText = `> Status: UNLOCKED (${successCount}/${images.length} FILES)`;
+                status.style.color = "#00ff41";
+                // 成功了也不隐藏按钮，方便你补救那些没解开的图（如果有的话）
+            } else {
+                // 如果一个都没解开，那就是密码彻底错了
+                triggerError("ACCESS_DENIED (WRONG_KEY)");
+            }
+
+        } catch (e) {
+            triggerError("FATAL_ERROR");
+            console.error(e);
+        }
+    };
+
+    function triggerError(msg) {
+        status.innerText = `> Status: ${msg}`;
+        status.style.color = "#ff5f56";
+        passInput.classList.add('shake-error'); // 触发红色抖动动画
+        setTimeout(() => passInput.classList.remove('shake-error'), 300);
+    }
+});
+</script>
+{{ end }}
