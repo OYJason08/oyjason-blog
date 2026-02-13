@@ -44,8 +44,31 @@
         /* 2. 修复移动端菜单展开时的滚动问题 */
         /* 当菜单打开时，确保可以滚动查看所有菜单项 */
         .sidebar.left-sidebar {
-            overflow-y: auto !important;
-            max-height: none !important;
+            /* 1. 核心：从 fixed 改为 relative */
+            position: relative !important;
+            
+            /* 2. 取消高度限制，让它根据内容自动撑开 */
+            height: auto !important;
+            
+            /* 3. 取消吸附定位 */
+            top: auto !important;
+            bottom: auto !important;
+            
+            /* 4. 移动端通常侧边栏宽度要占满或者自适应 */
+            width: 100% !important;
+            margin-bottom: 20px !important; /* 给底部留点呼吸空间 */
+            
+            /* 5. 确保在文档流中正常排列 */
+            display: flex !important;
+            flex-direction: column !important;
+            
+            /* 修复可能的层级问题 */
+            z-index: 1 !important;
+        }
+
+        /* 可选：如果你希望移动端侧边栏的内容紧凑一点 */
+        .sidebar.left-sidebar .widget {
+            margin-bottom: 15px !important;
         }
         .sidebar {
             animation: none !important;

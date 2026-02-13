@@ -27,7 +27,13 @@
         animation-delay: 0.1s; /* 稍微等一下侧边栏 */
     }
 
-    /* 1. 基础设置：给所有文章卡片挂载动画 */
+
+    .article-list--compact article .article-link {
+        /* 强制让它成为块级，确保 transform 能带动背景和边框 */
+        display: flex !important;
+        width: 100%;
+        will-change: transform, opacity;
+    }
     .article-list article, .article-list--compact article {
         animation: cascade-reveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     }
