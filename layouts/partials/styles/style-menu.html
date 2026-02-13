@@ -1,0 +1,100 @@
+<style>
+    /* 容器间距 */
+    .menu-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px !important;
+        padding: 0 !important;
+        list-style: none !important;
+    }
+
+    /* 1. 默认状态：所有菜单（包括 Home）都统一成这个毛玻璃方框 */
+    .menu-link {
+        display: flex !important;
+        align-items: center;
+        gap: 12px !important;
+        width: 155% !important;        /* 宽度控制 */
+        padding: 12px 18px !important;
+        border-radius: 10px !important;
+        margin-bottom: 30px;
+        
+        /* 默认毛玻璃背景 */
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        
+        /* 字体设置 (等宽字体) */
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-family: 'Courier New', monospace !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .menu-link svg {
+        stroke: rgba(255, 255, 255, 0.8) !important;
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    /* 2. 悬停效果 (未激活时) */
+    .menu-link:not(.active):hover {
+        background: rgba(255, 255, 255, 0.12) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        transform: translateX(30px);
+    }
+
+    /* 3. 激活状态 (Active)：进入页面后点亮特定颜色 */
+    .menu-link.active {
+        /* 使用 HTML 传过来的 Hue 变量 */
+        --active-color: hsl(var(--active-hue), 60%, 84%);
+        
+        border-color: var(--active-color) !important;
+        color: var(--active-color) !important;
+        background: rgba(0, 0, 0, 0.2) !important; /* 背景稍微加深突出亮度 */
+        box-shadow: 0 0 30px rgba(var(--active-color), 0.2) !important;
+        transform: scale(1.02) translateX(30px);
+    }
+
+    /* 2. 激活状态：利用 li.current 级联控制 */
+    li.current .menu-link {
+        /* 读取父级 li 上的变量，如果没传则默认给个绿色 (145) */
+        --active-color: hsl(var(--active-hue, 145), 70%, 60%);
+        
+        background: linear-gradient(90deg, rgba(var(--active-color), 0.1), transparent);
+        border-left-color: var(--active-color);
+        color: var(--active-color) !important;
+        
+        /* 动画效果 */
+        text-shadow: 0 0 8px var(--active-color);
+        transform: translateX(5px); /* 稍微向右弹一下，比 scale 更有极客感 */
+    }
+
+    /* 3. 图标颜色同步 */
+    li.current .menu-link svg {
+        stroke: var(--active-color) !important;
+        filter: drop-shadow(0 0 5px var(--active-color));
+    }
+
+    /* 4. (可选) 扫描线动画：挂在 menu-link 上 */
+    /* li.current .menu-link::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(to bottom, transparent, var(--active-color), transparent);
+        opacity: 0.1;
+        transform: translateY(-100%);
+        animation: scanline 3s infinite linear;
+        pointer-events: none;
+    } */
+
+    /* @keyframes scanline {
+        100% { transform: translateY(100%); }
+    } */
+    .menu-link.active svg {
+        stroke: var(--active-color) !important;
+        filter: drop-shadow(0 0 2px var(--active-color));
+    }
+</style>

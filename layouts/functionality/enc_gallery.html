@@ -1,10 +1,8 @@
 {{ define "main" }}
-<div class="main-container">
+<div class="main-container article-page" style="margin-top: var(--sidebar-spacing);">
     <div class="article-content">
-        <header class="article-header">
-            <h1 class="article-title">{{ .Title }}</h1>
-            <p class="article-subtitle">{{ .Description }}</p>
-        </header>
+        <h1 class="article-title">{{ .Title }}</h1>
+        <p class="article-subtitle">{{ .Description }}</p>
 
         <div class="gallery-vault-control">
             <div class="hack-terminal">

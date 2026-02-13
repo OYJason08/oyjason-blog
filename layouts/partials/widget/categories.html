@@ -1,0 +1,60 @@
+{{- $context := . -}}
+{{- if .Context -}}
+    {{- $context = .Context -}}
+{{- end -}}
+
+{{- $categories := $context.Site.Taxonomies.categories -}}
+
+{{- /* 1. 获取当前页面的永久链接，用于后续比对 */ -}}
+{{- $currentPermalink := $context.Permalink -}}
+
+{{- if gt (len $categories) 0 -}}
+<div class="widget widget--card widget--categories">
+    <h2 class="widget-title section-title">
+        {{ T "categories" | default "Categories" }}
+    </h2>
+    
+    <div class="widget-body">
+        <div class="tagCloud-tags">
+            {{ range $name, $taxonomy := $categories }}
+                
+                {{- /* 配置区域：HSL 色相字典 (0-360) */ -}}
+                {{ $hueMap := dict 
+                    "life"               351
+                    "film & television"  45 
+                    "coding"             170
+                    "tech"               200
+                    "design"             270
+                    "reading"            100
+                }}
+                
+                {{ $hue := index $hueMap $name | default 0 }}
+                {{ $color := printf "hsl(%d, 60%%, 84%%)" $hue }}
+
+                {{- /* 2. 核心逻辑：判断是否处于当前分类页面 */ -}}
+                {{- $isActive := eq $currentPermalink .Page.Permalink -}}
+
+                <a href="{{ .Page.RelPermalink }}" 
+                   class="category-link {{ if $isActive }}active{{ end }}"
+                   style="
+                       {{ if $isActive }}
+                           /* 激活状态：背景填满，文字变黑，边框同色 */
+                           background-color: {{ $color | safeCSS }} !important;
+                           border-color: {{ $color | safeCSS }} !important;
+                           color: #2a2a2a !important; 
+                           box-shadow: 0 0 15px {{ $color | safeCSS }}; /* 加个发光效果 */
+                       {{ else }}
+                           /* 普通状态：背景透明，文字彩色 */
+                           background-color: transparent !important;
+                           border-color: {{ $color | safeCSS }} !important;
+                           color: {{ $color | safeCSS }} !important;
+                       {{ end }}
+                   ">
+                   {{ $name }} 
+                   <span class="count-badge" style="{{ if $isActive }}color: #2a2a2a !important;{{ end }}">{{ .Count }}</span>
+                </a>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{- end -}}

@@ -1,0 +1,34 @@
+<style>
+
+
+    .sidebar.right-sidebar {
+        width: 30% !important; /* 跟随主题布局 */
+        max-width: 100% !important;
+        flex-basis: auto !important;
+        padding-left: 40px
+    }
+    
+    @media (min-width: 1024px) {
+        .main-container {
+            gap: 20px !important; 
+        
+            grid-template-columns: 1fr 300px !important;
+        }
+    }
+    /* --- 电脑/平板端样式（屏幕宽度大于 768px 时触发） --- */
+    @media screen and (min-width: 768px) {
+        /* 电脑端通常侧边栏是固定的，我们可以给一个更舒适的高度 */
+        .sidebar .subtitle, .site-description, .profile-description {
+            /* 【电脑端高度】空间充裕，给高一点，容纳更多文字 */
+            height: 5rem !important; 
+            min-height: 5rem !important;
+            
+            padding-left: 10px;    
+            padding-top: 5px;
+            
+        }
+    }
+    
+    
+
+</style>

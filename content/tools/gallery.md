@@ -2,15 +2,11 @@
 title: "Private Gallery"
 date: 2026-02-11T23:38:00
 description: "An encrypted gallery. Decryption happens purely on the client-side."
-type: "gallery"
-layout: "gallery"
+type: "functionality"
+url: "/enc_gallery/"
+layout: "enc_gallery"
 
 # 侧边栏菜单配置
-menu:
-    main:
-        weight: -90
-        params:
-            icon: photo # 确保你有对应的 photo.svg
 
 # 加密资源列表
 # 这些文件应存放在你的 static/gallery/ 目录下

@@ -6,7 +6,7 @@ theme = "hugo-theme-stack"
 [params]
     favicon = "/favicon.ico"
     mainSections = ["post"]
-    author = "你的名字"
+    author = "OYJason"
     description = "学会放好以前的渴望"
 
     [params.sidebar]
@@ -23,18 +23,31 @@ theme = "hugo-theme-stack"
         copyright = "© 2026 OYJason"
 
 
-# 菜单配置
+
 [[menu.main]]
     identifier = "home"
     name = "Home"
     url = "/"
     weight = 1
+    [menu.main.params]
+        icon = "home"
 
 [[menu.main]]
-    identifier = "archives"
-    name = "Archives"
-    url = "/archives/"
+    identifier = "gallery"
+    name = "Gallery"
+    url = "/enc_gallery/"
     weight = 2
+    [menu.main.params]
+        icon = "photo"
+
+
+[[menu.main]]
+    identifier = "encryptor"
+    name = "Encryptor"
+    url = "/encryptor/"
+    weight = 3
+    [menu.main.params]
+        icon = "terminal"
 
 
 [params.widgets]

@@ -1,0 +1,109 @@
+
+<style>
+    .sidebar.left-sidebar .widget--categories,
+    .sidebar.left-sidebar .widget--categories .widget-body,
+    .sidebar.left-sidebar .widget--categories .tagCloud-tags {
+        background: transparent !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    
+    /* 隐藏默认图标 */
+    .sidebar.left-sidebar .widget--categories .widget-icon {
+        display: none !important;
+    }
+
+    /* 标题样式调整 */
+    .sidebar.left-sidebar .widget--categories .widget-title {
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
+        padding: 0 !important;
+        display: block !important;
+        font-weight: bold;
+        color: #fff;
+        opacity: 0.8;
+    }
+
+    /* 布局容器：强制垂直排列 */
+    .sidebar.left-sidebar .widget--categories .tagCloud-tags {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 70% !important;
+    }
+
+    /* 链接按钮通用样式 (颜色由 HTML 内联样式控制) */
+    .sidebar.left-sidebar .widget--categories .category-link {
+        display: flex !important;
+        justify-content: space-between;
+        text-transform: capitalize !important;
+        align-items: center;
+        width: 90% !important;
+        box-sizing: border-box !important;
+        
+        background: transparent !important;
+        /* border-color 由内联样式控制，这里只需设置宽度和样式 */
+        border-width: 3px !important;
+        border-style: solid !important;
+        border-radius: 8px !important;
+        
+        /* 字体 */
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px;
+        text-decoration: none !important;
+        text-align: left !important;
+        
+        padding: 12px 18px !important;
+        margin: 0 !important;
+        
+        transition: all 0.3s ease !important;
+    }
+
+    /* 悬停效果：背景微微变亮 */
+    .sidebar.left-sidebar .widget--categories .category-link:not(.active):hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        transform: translateX(5px);
+    }
+
+    /* 数量徽章样式 */
+    .sidebar.left-sidebar .widget--categories .count-badge {
+        font-size: 0.8em;
+        opacity: 0.7;
+        color: inherit; /* 继承父级文字颜色 */
+    }
+
+    /* === 新增：激活状态样式 === */
+    .sidebar.left-sidebar .widget--categories .category-link.active {
+        /* 稍微放大一点点，凸显当前位置 */
+        transform: scale(1.02) !important; 
+        
+        /* 鼠标变回默认箭头，暗示“你就在这儿，不用再点了” */
+        cursor: default !important;
+        
+        /* 稍微加一点层级，保证阴影不被遮挡 */
+        z-index: 1;
+    }
+
+
+    /* 专门针对分类页顶部的文字框 */
+    .taxonomy-header {
+        border-left: 5px solid #3b82f6; /* 加一条蓝色的左边框，增加“画风”区别 */
+        background: rgba(255, 255, 255, 0.03) !important;
+        padding: 2rem !important;
+        margin-bottom: 2rem;
+    }
+
+    /* 让分类标题有 TypeIt 般的仪式感 */
+    .taxonomy-title {
+        font-family: 'Courier New', monospace;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--primary-color) !important;
+    }
+</style>

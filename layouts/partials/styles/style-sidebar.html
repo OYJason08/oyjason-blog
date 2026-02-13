@@ -1,0 +1,125 @@
+<style>
+
+    :root {
+        --sidebar-top-offset: 20px; /* 你可以根据需求调整这个值 */
+        --avatar-size: 180px !important;
+    }
+    .sidebar.left-sidebar.sticky {
+        position: sticky !important;
+        top: var(--sidebar-top-offset) !important;
+        align-self: flex-start; 
+    }
+    /* 1. 统一侧边栏容器在所有页面下的初始顶部间距 */
+
+    /* 3. 统一头像容器本身的内外边距（消除 Header 带来的干扰） */
+    .site-info {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    .sidebar header .site-avatar .avatar {
+        width: var(--avatar-size) !important;
+        height: var(--avatar-size) !important;
+        max-width: none !important;
+        margin-bottom: 50px !important;
+    }
+
+
+    .sidebar {
+        width: 25% !important; /* 跟随主题布局 */
+        max-width: 100% !important;
+        flex-basis: auto !important;
+        /* font-family: 'Courier New', monospace !important; */
+    }
+
+    @media screen and (max-width: 768px) {
+        .sidebar { 
+            width: 95% !important; 
+            max-width: 95% !important; 
+            margin: 10px auto;
+            /* 【修复】手机端增加顶部内边距，让标题离顶部远一点 */
+            padding-top: 40px !important; 
+        }
+    }
+
+    .sidebar .site-name {
+
+        font-size: 3rem !important; /* 想要更大改成 3rem */
+        font-weight: 800 !important;  /* 特粗字体 */
+        margin-top: 20px !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* 确保里面的链接也继承这个大小 */
+    .sidebar .site-name a {
+        color: #fff !important; /* 或者写死 #fff */
+        text-decoration: none !important;
+    }
+
+    .sidebar .subtitle, .site-description, .profile-description {
+        display: flex !important;
+        align-items: flex-start;    /* 垂直靠上 */
+        justify-content: flex-start; /* 水平靠左 */
+        
+        width: 90% !important;      /* 留出左右边距 */
+        /* margin: 10px auto !important; */
+        /* margin: 25px auto 10px !important; */
+        /* 【手机端高度】手机屏幕宝贵，给稍微矮一点的固定空间 */
+        /* height: 3.5rem !important;   */
+        height: auto !important;
+        min-height: 3.5rem !important;
+        padding-left: 5px;          /* 手机端稍微紧凑一点 */
+        padding-top: 2px;
+        
+        overflow: hidden !important; /* 防止溢出 */
+        
+        /* 文字通用设置 */
+        text-align: left;
+        word-break: break-all;
+        white-space: normal !important;
+        line-height: 1.3 !important;
+        user-select: none;
+        /* transition: opacity 0.2s ease, font-size 0.2s ease; */
+    }
+
+    
+    /* --- 电脑/平板端样式（屏幕宽度大于 768px 时触发） --- */
+    @media screen and (min-width: 768px) {
+        /* 电脑端通常侧边栏是固定的，我们可以给一个更舒适的高度 */
+        .sidebar .subtitle, .site-description, .profile-description {
+            /* 【电脑端高度】空间充裕，给高一点，容纳更多文字 */
+            margin-left: 20px !important; /* 统一左边距 */
+            height: 5rem !important; 
+            min-height: 5rem !important;
+            margin-bottom: 40px !important; /* 标题和描述之间的间距 */
+            padding-left: 20px;      /* 电脑端呼吸感更强 */
+            padding-top: 5px;
+            
+        }
+    }
+
+
+    /* 针对侧边栏里的所有文字元素进行统一 */
+    .sidebar .site-name,
+    .sidebar .site-description,
+    .sidebar .menu-item span,
+    .sidebar .widget-title,
+    .sidebar .widget-glass-button .btn-text {
+        /* font-family: 'Courier New', monospace !important; */
+        letter-spacing: 0.5px; /* 等宽字体通常加点间距更好看 */
+    }
+
+    /* 统一侧边栏图标旁边的文字大小 */
+    .sidebar .menu-text, 
+    .sidebar .btn-text {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+    }
+
+
+    @media (min-width: 1024px) {
+        .main-container {
+            gap: 20px !important; 
+            grid-template-columns: 1fr 300px !important;
+        }
+    }
+</style>

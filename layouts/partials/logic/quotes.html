@@ -18,9 +18,9 @@
                     return acc + (char.match(/[^\x00-\xff]/) ? 2 : 1);
                 }, 0);
                 console.log(weight)
-                if (weight > 30) subtitleElement.style.fontSize = "1.5rem"; // 极长文本
-                else if (weight > 20) subtitleElement.style.fontSize = "1.8rem"; // 中长文本
-                else subtitleElement.style.fontSize = "2.1rem"; // 短文本
+                if (weight > 30) subtitleElement.style.fontSize = "1.8rem"; // 极长文本
+                else if (weight > 20) subtitleElement.style.fontSize = "2.1rem"; // 中长文本
+                else subtitleElement.style.fontSize = "2.4rem"; // 短文本
                 subtitleElement.textContent = text;
 
                 // if (typeInstance) { typeInstance.destroy(); }
