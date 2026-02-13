@@ -1,5 +1,4 @@
 <style>
-
     :root {
         --sidebar-top-offset: 20px; /* 你可以根据需求调整这个值 */
         --avatar-size: 180px !important;
@@ -9,9 +8,8 @@
         top: var(--sidebar-top-offset) !important;
         align-self: flex-start; 
     }
-    /* 1. 统一侧边栏容器在所有页面下的初始顶部间距 */
 
-    /* 3. 统一头像容器本身的内外边距（消除 Header 带来的干扰） */
+
     .site-info {
         padding-top: 0 !important;
         margin-top: 0 !important;
@@ -32,12 +30,26 @@
     }
 
     @media screen and (max-width: 768px) {
-        .sidebar { 
-            width: 95% !important; 
-            max-width: 95% !important; 
-            margin: 10px auto;
-            /* 【修复】手机端增加顶部内边距，让标题离顶部远一点 */
-            padding-top: 40px !important; 
+        .sidebar.left-sidebar.sticky {
+            position: relative !important; /* 恢复为文档流布局 */
+            top: auto !important;          /* 取消 top 设置 */
+            height: auto !important;       /* 高度随内容撑开，不再是 100vh */
+            width: 100% !important;        /* 确保占满宽度 (如果需要) */
+            
+            /* 避免移动端侧边栏把内容挤下去太多，通常侧边栏在移动端是默认隐藏的 */
+            /* 如果你的侧边栏在移动端是显示的，可能需要调整 margin */
+            margin-top: 0 !important; 
+        }
+
+        /* 2. 修复移动端菜单展开时的滚动问题 */
+        /* 当菜单打开时，确保可以滚动查看所有菜单项 */
+        .sidebar.left-sidebar {
+            overflow-y: auto !important;
+            max-height: none !important;
+        }
+        .sidebar {
+            animation: none !important;
+            margin-left: 40px !important; /* 移动端侧边栏稍微内缩一点，增加呼吸感 */
         }
     }
 

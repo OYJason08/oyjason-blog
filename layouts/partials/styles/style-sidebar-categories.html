@@ -68,7 +68,7 @@
     /* 悬停效果：背景微微变亮 */
     .sidebar.left-sidebar .widget--categories .category-link:not(.active):hover {
         background: rgba(255, 255, 255, 0.1) !important;
-        transform: translateX(5px);
+        transform: translateX(15px);
     }
 
     /* 数量徽章样式 */
@@ -82,6 +82,7 @@
     .sidebar.left-sidebar .widget--categories .category-link.active {
         /* 稍微放大一点点，凸显当前位置 */
         transform: scale(1.02) !important; 
+        transform: translateX(15px) !important;
         
         /* 鼠标变回默认箭头，暗示“你就在这儿，不用再点了” */
         cursor: default !important;
@@ -89,7 +90,6 @@
         /* 稍微加一点层级，保证阴影不被遮挡 */
         z-index: 1;
     }
-
 
     /* 专门针对分类页顶部的文字框 */
     .taxonomy-header {

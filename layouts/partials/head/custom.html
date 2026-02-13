@@ -2,5 +2,48 @@
 {{ if $icon }}
     <link rel="icon" type="image/png" href="{{ $icon.Permalink }}?v={{ now.Unix }}">
 {{ end }}
-{{ partial "styles/styles.html" . }}
 
+<script>
+    (function() {
+        // 检查当前标签页是否已经访问过
+        if (sessionStorage.getItem('animation-played')) {
+            // 如果访问过，给 html 标签加上标记类
+            document.documentElement.classList.add('anim-done');
+        } else {
+            // 如果是第一次，设置标记
+            sessionStorage.setItem('animation-played', 'true');
+        }
+    })();
+</script>
+
+<style>
+    /* 如果是“回头客” (html.anim-done)，
+       强制取消侧边栏所有元素的入场动画 
+    */
+    html.anim-done .sidebar,
+    html.anim-done .sidebar .site-info,
+    html.anim-done .sidebar .menu li,
+    html.anim-done .sidebar .menu-social, 
+    html.anim-done .sidebar .menu .menu-link,
+    html.anim-done .sidebar .widget-categories .category-link,
+    html.anim-done .sidebar .widget{ /* 如果你也想取消文章列表动画，保留这一行；否则删掉 */
+        
+        /* 暴力清除动画关键帧 */
+        animation: none !important;
+        
+        /* 强制元素直接显示（因为你的动画原本是 opacity: 0 开始的） */
+        opacity: 1 !important;
+        filter: none !important;
+        
+        /* 清除延迟 */
+        animation-delay: 0s !important;
+    }
+   
+    /* html.anim-done .menu-link,
+    html.anim-done .category-link,
+    html.anim-done .article-list article {
+        transition: all 0.3s ease !important;
+    } */
+</style>
+
+{{ partial "styles/styles.html" . }}

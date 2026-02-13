@@ -5,3 +5,64 @@
 {{ partial "styles/style-article.html" . }}
 {{ partial "styles/style-menu.html" . }}
 {{ partial "styles/style-sidebar-categories.html" . }}
+{{ partial "styles/style-mainblocks.html" . }}
+
+<style>
+    @keyframes cascade-reveal {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px); /* 初始位置在上方 */
+            filter: blur(5px); /* 可选：加一点模糊感，更像全息投影 */
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+    }
+
+    .main-container > header,
+    .taxonomy-header {
+        animation: cascade-reveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        animation-delay: 0.1s; /* 稍微等一下侧边栏 */
+    }
+
+    /* 1. 基础设置：给所有文章卡片挂载动画 */
+    .article-list article, .article-list--compact article {
+        animation: cascade-reveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    /* 我们手动写出前 10 个，通常屏幕也只能装下这么多 */
+    .article-list article:nth-child(1),.article-list--compact article:nth-child(1)  { animation-delay: 0.2s; }
+    .article-list article:nth-child(2),.article-list--compact article:nth-child(2)  { animation-delay: 0.4s; }
+    .article-list article:nth-child(3),.article-list--compact article:nth-child(3)  { animation-delay: 0.6s; }
+    .article-list article:nth-child(4),.article-list--compact article:nth-child(4)  { animation-delay: 0.8s; }
+    .article-list article:nth-child(5),.article-list--compact article:nth-child(5)  { animation-delay: 1.0s; }
+    .article-list article:nth-child(6),.article-list--compact article:nth-child(6)  { animation-delay: 1.2s; }
+    .article-list article:nth-child(7),.article-list--compact article:nth-child(7)  { animation-delay: 1.4s; }
+    .article-list article:nth-child(8),.article-list--compact article:nth-child(8)  { animation-delay: 1.6s; }
+    .article-list article:nth-child(9),.article-list--compact article:nth-child(9)  { animation-delay: 1.8s; }
+    .article-list article:nth-child(10),.article-list--compact article:nth-child(10)  { animation-delay: 2.0s; }
+    .article-list article:nth-child(n+11),.article-list--compact article:nth-child(n+11) { 
+        animation-delay: 1.1s; 
+    }
+
+    .sidebar {
+        animation: cascade-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    /* 如果你想让侧边栏里的 菜单、Widget 也一个接一个出来 */
+    .sidebar .site-info, 
+    .sidebar .menu-social, 
+    .sidebar .sidebar-widgets .widget {
+        animation: cascade-reveal 0.5s ease both;
+    }
+
+    /* 侧边栏内部的时间差 */
+    .sidebar .site-info             { animation-delay: 0s; }   /* 头像最先出 */
+    .sidebar .menu-social           { animation-delay: 0.5s; }
+    .sidebar .sidebar-widgets .widget {
+        animation-delay: 1s !important; /* Widget 最后 */
+    }
+    
+</style>
