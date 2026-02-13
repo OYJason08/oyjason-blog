@@ -9,13 +9,11 @@
                 {{- $isLocal = .local -}}
             {{- end -}}
             <figure class="site-avatar">
-                <a href="{{ $.Site.BaseURL | default "/" }}">
-                    {{- if $isLocal -}}
-                        <img src="{{ $avatarSrc | relURL }}" width="300" height="300" class="avatar" loading="lazy" alt="Avatar">
-                    {{- else -}}
-                        <img src="{{ $avatarSrc }}" width="300" height="300" class="avatar" loading="lazy" alt="Avatar">
-                    {{- end -}}
-                </a>
+                {{- if $isLocal -}}
+                    <img src="{{ $avatarSrc | relURL }}" width="300" height="300" class="avatar" loading="lazy" alt="Avatar">
+                {{- else -}}
+                    <img src="{{ $avatarSrc }}" width="300" height="300" class="avatar" loading="lazy" alt="Avatar">
+                {{- end -}}
                 {{- if reflect.IsMap . -}}
                     {{- if .emoji -}}<span class="emoji">{{ .emoji }}</span>{{- end -}}
                 {{- end -}}

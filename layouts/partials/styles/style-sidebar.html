@@ -130,6 +130,10 @@
             padding-top: 5px;
             
         }
+        .main-container {
+            gap: 20px !important; 
+            grid-template-columns: 1fr 300px !important;
+        }
     }
 
 
@@ -151,10 +155,23 @@
     }
 
 
-    @media (min-width: 1024px) {
-        .main-container {
-            gap: 20px !important; 
-            grid-template-columns: 1fr 300px !important;
-        }
+
+    @view-transition {
+        navigation: auto;
+    }
+
+    /* 2. 定义过渡的具体效果 (可选，默认是淡入淡出) */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        /* 这里控制页面切换时的全局动画时长 */
+        animation-duration: 0.4s; 
+    }
+
+    /* 3. 关键：稳定侧边栏 (防止侧边栏在切换时闪烁) */
+    /* 给侧边栏一个独立的“身份ID”，告诉浏览器：
+    “虽然换了页面，但这个侧边栏是同一个东西，不要销毁它，要平滑过渡” 
+    */
+    .sidebar.left-sidebar {
+        view-transition-name: sidebar-container;
     }
 </style>

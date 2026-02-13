@@ -43,7 +43,8 @@
     .menu-link:not(.active):hover {
         background: rgba(255, 255, 255, 0.12) !important;
         border-color: rgba(255, 255, 255, 0.4) !important;
-        transform: translateX(15px);
+        transform: scale(1.02) !important; 
+        /* transform: translateX(15px); */
     }
 
     /* 3. 激活状态 (Active)：进入页面后点亮特定颜色 */
@@ -69,7 +70,9 @@
         
         /* 动画效果 */
         text-shadow: 0 0 8px var(--active-color);
-        transform: translateX(15px); /* 稍微向右弹一下，比 scale 更有极客感 */
+        
+        transform: scale(1.02) !important; 
+        /* transform: translateX(15px); */
     }
 
     /* 3. 图标颜色同步 */
