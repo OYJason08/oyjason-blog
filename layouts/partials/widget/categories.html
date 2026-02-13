@@ -37,21 +37,50 @@
                 <a href="{{ .Page.RelPermalink }}" 
                    class="category-link {{ if $isActive }}active{{ end }}"
                    style="
+                       /* =========================================
+                          🔴 布局核心设置 (Fixed Width List)
+                          ========================================= */
+                       display: block;             /* 让它是块级元素，独占一行 */
+                       width: 100%;            /* 防止宽度超出父容器（手机端安全措施）*/
+                       max-width: 240px;               /* 👈【关键】在这里修改你的固定宽度数值 */
+                       
+                       /* 位置控制：居中还是居左？选一个 */
+                       margin: 0 auto 10px auto;   /* 方案A: 居中堆叠 (上下10px，左右自动) */
+                       /* margin: 0 0 10px 0; */   /* 方案B: 靠左对齐 */
+
+                       text-align: center;         /* 文字在按钮内部居中 */
+                       box-sizing: border-box;     /* 确保 padding 不会撑大宽度 */
+                       
+                       /* 长文字处理 (超出显示省略号) */
+                       white-space: nowrap;
+                       overflow: hidden;
+                       text-overflow: ellipsis;
+                       padding: 8px 10px;          /* 增加一点内边距，让按钮胖一点更好看 */
+                       border-radius: 8px;         /* 加上圆角 */
+
                        {{ if $isActive }}
-                           /* 激活状态：背景填满，文字变黑，边框同色 */
+                           /* 激活状态 */
                            background-color: {{ $color | safeCSS }} !important;
-                           border-color: {{ $color | safeCSS }} !important;
+                           border: 1px solid {{ $color | safeCSS }} !important; 
                            color: #2a2a2a !important; 
-                           box-shadow: 0 0 15px {{ $color | safeCSS }}; /* 加个发光效果 */
+                           box-shadow: 0 4px 15px {{ $color | safeCSS }}; /* 增加投影立体感 */
+                           transform: scale(1.05); /* 激活时稍微大一点点 */
                        {{ else }}
-                           /* 普通状态：背景透明，文字彩色 */
+                           /* 普通状态 */
                            background-color: transparent !important;
-                           border-color: {{ $color | safeCSS }} !important;
+                           border: 1px solid {{ $color | safeCSS }} !important;
                            color: {{ $color | safeCSS }} !important;
                        {{ end }}
+                       
+                       /* 加上过渡动画，让鼠标放上去变色丝滑 */
+                       transition: all 0.3s ease; 
                    ">
                    {{ $name }} 
-                   <span class="count-badge" style="{{ if $isActive }}color: #2a2a2a !important;{{ end }}">{{ .Count }}</span>
+                   <span class="count-badge" style="
+                        margin-left: 5px; 
+                        font-size: 0.8em;
+                        {{ if $isActive }}color: #2a2a2a !important; opacity: 0.8;{{ end }}
+                   ">{{ .Count }}</span>
                 </a>
             {{ end }}
         </div>

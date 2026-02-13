@@ -1,0 +1,77 @@
+<style>
+    @keyframes cascade-reveal {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px); /* 初始位置在上方 */
+            filter: blur(5px); /* 可选：加一点模糊感，更像全息投影 */
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+    }
+
+    .sidebar {
+        animation: cascade-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .sidebar .site-info, 
+    .sidebar .menu-social, 
+    .sidebar .sidebar-widgets .widget {
+        animation: cascade-reveal 0.5s ease both;
+    }
+
+    .sidebar .site-info             { animation-delay: 0s; }   
+    .sidebar .menu-social           { animation-delay: 0.5s; }
+    .sidebar .sidebar-widgets .widget {
+        animation-delay: 1s !important; 
+    }
+    
+
+    .article-list article {
+        animation: cascade-reveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        will-change: transform, opacity;
+    }
+    .article-list article:nth-child(1) { animation-delay: 0.4s; }
+    .article-list article:nth-child(2) { animation-delay: 0.8s; }
+    .article-list article:nth-child(3) { animation-delay: 1.2s; }
+    .article-list article:nth-child(4) { animation-delay: 1.6s; }
+    .article-list article:nth-child(5) { animation-delay: 2.0s; }
+    .article-list article:nth-child(n+6) { animation-delay: 2.4s; }
+
+
+    
+    .main> header,
+    .article-list--compact {
+        
+        display: block !important;  
+        opacity: 0;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        
+        animation-name: cascade-reveal !important;
+        animation: cascade-reveal forwards !important;
+        animation-duration: 0.6s !important;
+        animation-fill-mode: both !important;
+        animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    }
+
+
+    .main> header{  animation-delay: 0.2s !important; }
+
+    .article-list--compact article:nth-child(1) { animation-delay: 0.4s !important; }
+    .article-list--compact article:nth-child(2)  { animation-delay: 0.8s !important; }
+    .article-list--compact article:nth-child(3)  { animation-delay: 1.2s !important; }
+    .article-list--compact article:nth-child(4)  { animation-delay: 1.6s !important; }
+    .article-list--compact article:nth-child(5)  { animation-delay: 2.0s !important; }
+    .article-list--compact article:nth-child(n+6)  { animation-delay: 2.4s !important; }
+
+    .article-list--compact article {
+        transform: none !important;
+        display: block !important;  
+    }
+
+
+
+</style>
