@@ -2,29 +2,3 @@
 <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
 {{ partial "logic/quotes.html" . }}
 {{ partial "logic/article_show.html" . }}
-
-.article-list--compact article {
-    border: 5px solid red !important;
-    position: relative !important; /* 确保能看到边框 */
-}
-
-/* 2. 蓝色边框：寻找 .article-link 类名 */
-.article-list--compact .article-link {
-    border: 5px solid blue !important;
-    background: rgba(0, 0, 255, 0.1) !important; /* 淡淡的蓝色背景 */
-}
-
-/* 3. 绿色边框：寻找 .article-wrapper (有些版本用这个) */
-.article-list--compact .article-wrapper {
-    border: 5px solid green !important;
-}
-
-/* 4. 紫色边框：寻找单纯的 a 标签 (如果没有 class) */
-.article-list--compact > a {
-    border: 5px solid purple !important;
-}
-
-/* 5. 橙色边框：直接找 section 下的第一层 div */
-section.article-list--compact > div {
-    border: 5px solid orange !important;
-}
